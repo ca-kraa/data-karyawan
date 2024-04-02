@@ -39,7 +39,7 @@
             <span>Jabatan</span></a>
     </li>
 
-    <li class="nav-item @if (request()->is('jabatan')) active @endif">
+    <li class="nav-item @if (request()->is('departmen')) active @endif">
         <a class="nav-link" href="/departmen">
             <i class="fas fa-fw fa-clipboard-list"></i>
             <span>Departemen</span></a>

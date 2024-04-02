@@ -14,6 +14,13 @@ class DepartmenController extends Controller
         return response()->json($departmen);
     }
 
+    public function indexDepartmen2()
+    {
+        $departmen = Departmen::all();
+        return view('departmen', compact('departmen'));
+    }
+
+
     public function createDepartment(Request $request)
     {
         $request->validate([

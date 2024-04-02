@@ -14,6 +14,24 @@ class JabatanController extends Controller
         return response()->json($jabatan);
     }
 
+    public function indexJabatan()
+    {
+        $jabatan = Jabatan::all();
+        return view('jabatan', compact('jabatan'));
+    }
+
+    public function detailJabatan($id)
+    {
+        $jabatan = Jabatan::find($id);
+
+        if (!$jabatan) {
+            return response()->json(['message' => 'Jabatan not found'], 404);
+        }
+
+        return response()->json(['message' => 'Success', 'data' => $jabatan], 200);
+    }
+
+
     public function createJabatan(Request $request)
     {
         $request->validate([

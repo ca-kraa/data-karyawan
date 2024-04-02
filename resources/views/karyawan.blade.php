@@ -154,55 +154,64 @@
 <script src="{{ asset('assets/sb-admin')}}/js/demo/datatables-demo.js"></script>
 
 
-<script>
+{{-- <script>
     $(document).ready(function () {
-        $('.btn-edit').on('click', function () {
-            var karyawanId = $(this).data('id');
-            $.ajax({
-                url: '/detail-karyawan/' + karyawanId,
-                type: 'GET',
-                success: function (response) {
-                    var karyawan = response.data;
-                    $('#modalTambahKaryawanLabel').text('Edit Karyawan');
-                    $('#id_jabatan').val(karyawan.id_jabatan);
-                    $('#id_departmen').val(karyawan.id_departmen);
-                    $('#nama_lengkap').val(karyawan.nama_lengkap);
-                    $('#alamat').val(karyawan.alamat);
-                    $('#tanggal_lahir').val(karyawan.tanggal_lahir);
-                    $('#nomor_handphone').val(karyawan.nomor_handphone);
-                    $('#email').val(karyawan.email);
-                    $('#dokumen').val('');
-                    $('#btnSimpan').data('id', karyawanId);
-                    $('#modalTambahKaryawan').modal('show');
-                },
-                error: function (xhr, status, error) {
-                    console.error(xhr);
-                }
-            });
-        });
+    var csrfToken = $('meta[name="csrf-token"]').attr('content');
 
-        $('#btnSimpan').on('click', function () {
-            var karyawanId = $(this).data('id');
-            var formData = new FormData($('#formTambahKaryawan')[0]);
-            $.ajax({
-                url: '/update-karyawan/' + karyawanId,
-                type: 'PUT',
-                data: formData,
-                processData: false,
-                contentType: false,
-                success: function (response) {
-                    alert(response.message);
-                    $('#modalTambahKaryawan').modal('hide');
-                    // Refresh halaman atau update tampilan data karyawan
-                },
-                error: function (xhr, status, error) {
-                    console.error(xhr);
-                    alert('Gagal memperbarui data karyawan');
-                }
-            });
+    $('.btn-edit').on('click', function () {
+        var karyawanId = $(this).data('id');
+        $.ajax({
+            url: '/detail-karyawan/' + karyawanId,
+            type: 'GET',
+            headers: {
+                'X-CSRF-TOKEN': csrfToken
+            },
+            success: function (response) {
+                var karyawan = response.data;
+                $('#modalTambahKaryawanLabel').text('Edit Karyawan');
+                $('#id_jabatan').val(karyawan.id_jabatan);
+                $('#id_departmen').val(karyawan.id_departmen);
+                $('#nama_lengkap').val(karyawan.nama_lengkap);
+                $('#alamat').val(karyawan.alamat);
+                $('#tanggal_lahir').val(karyawan.tanggal_lahir);
+                $('#nomor_handphone').val(karyawan.nomor_handphone);
+                $('#email').val(karyawan.email);
+                $('#dokumen').val('');
+                $('#btnSimpan').data('id', karyawanId);
+                $('#modalTambahKaryawan').modal('show');
+            },
+            error: function (xhr, status, error) {
+                console.error(xhr);
+            }
         });
     });
-</script>
+
+    $('#btnSimpan').on('click', function () {
+        var karyawanId = $(this).data('id');
+        var formData = new FormData($('#formTambahKaryawan')[0]);
+        $.ajax({
+            url: '/update-karyawan/' + karyawanId,
+            type: 'PUT',
+            data: formData,
+            processData: false,
+            contentType: false,
+            headers: {
+                'X-CSRF-TOKEN': csrfToken
+            },
+            success: function (response) {
+                alert(response.message);
+                $('#modalTambahKaryawan').modal('hide');
+                // Refresh halaman atau update tampilan data karyawan
+            },
+            error: function (xhr, status, error) {
+                console.error(xhr);
+                alert('Gagal memperbarui data karyawan');
+            }
+        });
+    });
+});
+
+</script> --}}
 
 <script>
     $(document).ready(function() {
@@ -231,6 +240,7 @@
 
 <script>
     $(document).ready(function () {
+        var csrfToken = $('meta[name="csrf-token"]').attr('content');
 
         $('#btnTambahKaryawan').click(function () {
             $('#modalTambahKaryawan').modal('show');
@@ -250,7 +260,7 @@
                 success: function (response) {
                     alert('Data karyawan berhasil disimpan');
                     $('#modalTambahKaryawan').modal('hide');
-                    location.reload();
+                    // location.reload();
                 },
                 error: function (xhr, status, error) {
                     alert('Gagal menyimpan data karyawan');

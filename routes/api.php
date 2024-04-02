@@ -24,6 +24,7 @@ Route::get('/hitung-karyawan', [KaryawanController::class, 'countKaryawan']);
 Route::get('/data-jabatan', [JabatanController::class, 'dataJabatan']);
 Route::post('/create-jabatan', [JabatanController::class, 'createJabatan']);
 Route::put('/update-jabatan/{id}', [JabatanController::class, 'updateJabatan']);
+Route::get('/detail-jabatan/{id}', [JabatanController::class, 'detailJabatan']);
 Route::delete('/delete-jabatan/{id}', [JabatanController::class, 'deleteJabatan']);
 Route::get('/hitung-jabatan', [JabatanController::class, 'countJabatan']);
 
