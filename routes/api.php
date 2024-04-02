@@ -14,7 +14,8 @@ Route::get('/user', function (Request $request) {
 
 Route::get('/data-karyawan', [KaryawanController::class, 'indexKaryawan']);
 Route::post('/create-karyawan', [KaryawanController::class, 'createKaryawan']);
-Route::put('/update-karyawan', [KaryawanController::class, 'updateKaryawan']);
+Route::put('/update-karyawan/{id}', [KaryawanController::class, 'updateKaryawan']);
+Route::get('/detail-karyawan/{id}', [KaryawanController::class, 'detailKaryawan']);
 Route::delete('/delete-karyawan/{id}', [KaryawanController::class, 'deleteKaryawan']);
 Route::get('/hitung-karyawan', [KaryawanController::class, 'countKaryawan']);
 

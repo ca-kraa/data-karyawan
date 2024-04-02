@@ -26,59 +26,48 @@
                         <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                             <thead>
                                 <tr>
-                                    <th>Name</th>
-                                    <th>Position</th>
-                                    <th>Office</th>
-                                    <th>Age</th>
-                                    <th>Start date</th>
-                                    <th>Salary</th>
+                                    <th>Nama Lengkap</th>
+                                    <th>Alamat</th>
+                                    <th>Tanggal Lahir</th>
+                                    <th>Nomor Handphone</th>
+                                    <th>Email</th>
+                                    <th>Action</th>
                                 </tr>
                             </thead>
+
+                            <tbody id="munculdata">
+                                @foreach($karyawan as $data)
+                                <tr>
+                                    <td>{{ $data->nama_lengkap }}</td>
+                                    <td>{{ $data->alamat }}</td>
+                                    <td>{{ $data->tanggal_lahir }}</td>
+                                    <td>{{ $data->nomor_handphone }}</td>
+                                    <td>{{ $data->email }}</td>
+
+                                    <td>
+                                        <a href="{{ asset('storage/' . $data->dokumen) }}" target="_blank"
+                                            class="btn btn-info mr-2">
+                                            <i class="fas fa-file"></i>
+                                        </a>
+
+                                        <a href="#" class="btn btn-danger delete-karyawan " data-id="{{ $data->id }}">
+                                            <i class="fas fa-trash"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                                @endforeach
+                            </tbody>
+
                             <tfoot>
                                 <tr>
-                                    <th>Name</th>
-                                    <th>Position</th>
-                                    <th>Office</th>
-                                    <th>Age</th>
-                                    <th>Start date</th>
-                                    <th>Salary</th>
+                                    <th>Nama Lengkap</th>
+                                    <th>Alamat</th>
+                                    <th>Tanggal Lahir</th>
+                                    <th>Nomor Handphone</th>
+                                    <th>Email</th>
+                                    <th>Action</th>
                                 </tr>
                             </tfoot>
-                            <tbody>
-                                <tr>
-                                    <td>Tiger Nixon</td>
-                                    <td>System Architect</td>
-                                    <td>Edinburgh</td>
-                                    <td>61</td>
-                                    <td>2011/04/25</td>
-                                    <td>$320,800</td>
-                                </tr>
-                                <tr>
-                                    <td>Garrett Winters</td>
-                                    <td>Accountant</td>
-                                    <td>Tokyo</td>
-                                    <td>63</td>
-                                    <td>2011/07/25</td>
-                                    <td>$170,750</td>
-                                </tr>
-                                <tr>
-                                    <td>Ashton Cox</td>
-                                    <td>Junior Technical Author</td>
-                                    <td>San Francisco</td>
-                                    <td>66</td>
-                                    <td>2009/01/12</td>
-                                    <td>$86,000</td>
-                                </tr>
-                                <tr>
-                                    <td>Cedric Kelly</td>
-                                    <td>Senior Javascript Developer</td>
-                                    <td>Edinburgh</td>
-                                    <td>22</td>
-                                    <td>2012/03/29</td>
-                                    <td>$433,060</td>
-                                </tr>
-
-                            </tbody>
                         </table>
                     </div>
                 </div>
@@ -90,6 +79,7 @@
 
 
 </div>
+
 <div class="modal fade" id="modalTambahKaryawan" tabindex="-1" role="dialog" aria-labelledby="modalTambahKaryawanLabel"
     aria-hidden="true">
     <div class="modal-dialog" role="document">
@@ -104,17 +94,17 @@
                 <form id="formTambahKaryawan">
                     <div class="form-group">
                         <div class="form-group">
-                            <label for="jabatan">Jabatan</label>
-                            <select class="form-control" id="jabatan" name="jabatan" required>
+                            <label for="id_jabatan">Jabatan</label>
+                            <select class="form-control" id="jabatan" name="id_jabatan" required>
                             </select>
                         </div>
                         <div class="form-group">
-                            <label for="departmen">Departemen</label>
-                            <select class="form-control" id="Department" name="departmen" required>
+                            <label for="id_departmen">Departemen</label>
+                            <select class="form-control" id="Department" name="id_departmen" required>
                             </select>
                         </div>
-                        <label for="nama">Nama Lengkap</label>
-                        <input type="text" class="form-control" id="nama" name="nama" required>
+                        <label for="nama_lengkap">Nama Lengkap</label>
+                        <input type="text" class="form-control" id="nama_lengkap" name="nama_lengkap" required>
                     </div>
                     <div class="form-group">
                         <label for="alamat">Alamat</label>
@@ -126,7 +116,7 @@
                     </div>
                     <div class="form-group">
                         <label for="nomor_handphone">Nomor Handphone</label>
-                        <input type="text" class="form-control" id="nomor_handphone" name="nomor_handphone" required>
+                        <input type="number" class="form-control" id="nomor_handphone" name="nomor_handphone" required>
                     </div>
                     <div class="form-group">
                         <label for="email">Email</label>
@@ -145,6 +135,8 @@
         </div>
     </div>
 </div>
+
+
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 <script src="{{ asset('assets/sb-admin')}}/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 
@@ -161,125 +153,216 @@
 <!-- Page level custom scripts -->
 <script src="{{ asset('assets/sb-admin')}}/js/demo/datatables-demo.js"></script>
 
+
 <script>
     $(document).ready(function () {
-    $('#jabatan').select({
-        placeholder: 'Pilih Jabatan',
-        ajax: {
-            url: '/data-jabatan',
-            dataType: 'json',
-            delay: 250,
-            processResults: function (data) {
-                return {
-                    results: $.map(data, function (item) {
-                        return {
-                            id: item.id,
-                            text: item.nama_jabatan
-                        };
-                    })
-                };
-            },
-            cache: true
-        }
-    });
+        $('.btn-edit').on('click', function () {
+            var karyawanId = $(this).data('id');
+            $.ajax({
+                url: '/detail-karyawan/' + karyawanId,
+                type: 'GET',
+                success: function (response) {
+                    var karyawan = response.data;
+                    $('#modalTambahKaryawanLabel').text('Edit Karyawan');
+                    $('#id_jabatan').val(karyawan.id_jabatan);
+                    $('#id_departmen').val(karyawan.id_departmen);
+                    $('#nama_lengkap').val(karyawan.nama_lengkap);
+                    $('#alamat').val(karyawan.alamat);
+                    $('#tanggal_lahir').val(karyawan.tanggal_lahir);
+                    $('#nomor_handphone').val(karyawan.nomor_handphone);
+                    $('#email').val(karyawan.email);
+                    $('#dokumen').val('');
+                    $('#btnSimpan').data('id', karyawanId);
+                    $('#modalTambahKaryawan').modal('show');
+                },
+                error: function (xhr, status, error) {
+                    console.error(xhr);
+                }
+            });
+        });
 
-    // Ketika tombol "Tambah Karyawan" diklik, tampilkan modal
-    $('#btnTambahKaryawan').click(function () {
-        $('#modalTambahKaryawan').modal('show');
-    });
-
-    // Ketika tombol "Simpan" di modal diklik
-    $('#btnSimpan').click(function () {
-        // Lakukan operasi simpan data di sini
-        // Contoh: Simpan data menggunakan AJAX
-        $.ajax({
-            url: '/api/create-karyawan',
-            type: 'POST',
-            data: new FormData($('#formTambahKaryawan')[0]),
-            processData: false,
-            contentType: false,
-            success: function (response) {
-                // Tampilkan pesan sukses atau lakukan operasi lain
-                alert('Data karyawan berhasil disimpan');
-                $('#modalTambahKaryawan').modal('hide');
-            },
-            error: function (xhr, status, error) {
-                // Tampilkan pesan error atau lakukan operasi lain
-                alert('Gagal menyimpan data karyawan');
-                console.error(xhr.responseText);
-            }
+        $('#btnSimpan').on('click', function () {
+            var karyawanId = $(this).data('id');
+            var formData = new FormData($('#formTambahKaryawan')[0]);
+            $.ajax({
+                url: '/update-karyawan/' + karyawanId,
+                type: 'PUT',
+                data: formData,
+                processData: false,
+                contentType: false,
+                success: function (response) {
+                    alert(response.message);
+                    $('#modalTambahKaryawan').modal('hide');
+                    // Refresh halaman atau update tampilan data karyawan
+                },
+                error: function (xhr, status, error) {
+                    console.error(xhr);
+                    alert('Gagal memperbarui data karyawan');
+                }
+            });
         });
     });
-});
-
 </script>
 
 <script>
     $(document).ready(function() {
-    var dropdown = $('#Department');
-    if (!dropdown.length) {
-        console.error('Dropdown tidak ditemukan');
-        return;
-    }
-    dropdown.empty();
-    // Menambahkan opsi default
-    dropdown.append($('<option></option>').attr('value', '').attr('disabled', true).attr('selected', true).text('Pilih Departemen'));
-    $.ajax({
-        url: '/api/data-departmen',
-        type: 'GET',
-        dataType: 'json',
-        success: function(data) {
-            if (!data) {
-                console.error('Data tidak ditemukan');
-                return;
+        $('.delete-karyawan').click(function(e) {
+            e.preventDefault();
+            var id = $(this).data('id');
+            if (confirm('Apakah Anda yakin ingin menghapus karyawan ini?')) {
+                $.ajax({
+                    url: '/api/delete-karyawan/' + id,
+                    type: 'DELETE',
+                    data: {
+                        _token: '{{ csrf_token() }}'
+                    },
+                    success: function(response) {
+                        alert('Karyawan berhasil dihapus.');
+                        window.location.reload();
+                    },
+                    error: function(xhr) {
+                        alert('Gagal menghapus karyawan.');
+                    }
+                });
             }
-            $.each(data, function(key, entry) {
-                if (!entry.nama_departmen) {
-                    console.error('Properti nama_departmen tidak ditemukan pada entri', entry);
+        });
+    });
+</script>
+
+<script>
+    $(document).ready(function () {
+
+        $('#btnTambahKaryawan').click(function () {
+            $('#modalTambahKaryawan').modal('show');
+        });
+
+        $('#btnSimpan').click(function () {
+            var formData = new FormData($('#formTambahKaryawan')[0]);
+            formData.append('department_id', $('#Department').val());
+            formData.append('jabatan_id', $('#jabatan').val());
+            
+            $.ajax({
+                url: '/api/create-karyawan',
+                type: 'POST',
+                data: formData,
+                processData: false,
+                contentType: false,
+                success: function (response) {
+                    alert('Data karyawan berhasil disimpan');
+                    $('#modalTambahKaryawan').modal('hide');
+                    location.reload();
+                },
+                error: function (xhr, status, error) {
+                    alert('Gagal menyimpan data karyawan');
+                    console.error(xhr.responseText);
+                }
+            });
+        });
+
+        var dropdownDepartemen = $('#Department');
+        if (!dropdownDepartemen.length) {
+            console.error('Dropdown Departemen tidak ditemukan');
+            return;
+        }
+        dropdownDepartemen.empty();
+        dropdownDepartemen.append($('<option></option>').attr('value', '').attr('disabled', true).attr('selected', true).text('Pilih Departemen'));
+        $.ajax({
+            url: '/api/data-departmen',
+            type: 'GET',
+            dataType: 'json',
+            success: function(data) {
+                if (!data) {
+                    console.error('Data Departemen tidak ditemukan');
                     return;
                 }
-                dropdown.append($('<option></option>').attr('value', entry.nama_departmen).text(entry.nama_departmen));
-            });
-        },
-        error: function(error) {
-            console.error('Error saat mengambil data:', error);
+                $.each(data, function(key, entry) {
+                    if (!entry.nama_departmen) {
+                        console.error('Properti nama_departmen tidak ditemukan pada entri', entry);
+                        return;
+                    }
+                    dropdownDepartemen.append($('<option></option>').attr('value', entry.id).text(entry.nama_departmen));
+                });
+            },
+            error: function(error) {
+                console.error('Error saat mengambil data Departemen:', error);
+            }
+        });
+
+        var dropdownJabatan = $('#jabatan');
+        if (!dropdownJabatan.length) {
+            console.error('Dropdown Jabatan tidak ditemukan');
+            return;
         }
+        dropdownJabatan.empty();
+        dropdownJabatan.append($('<option></option>').attr('value', '').attr('disabled', true).attr('selected', true).text('Pilih Jabatan'));
+        $.ajax({
+            url: '/api/data-jabatan',
+            type: 'GET',
+            dataType: 'json',
+            success: function(data) {
+                if (!data) {
+                    console.error('Data Jabatan tidak ditemukan');
+                    return;
+                }
+                $.each(data, function(key, entry) {
+                    if (!entry.nama_jabatan) {
+                        console.error('Properti nama_jabatan tidak ditemukan pada entri', entry);
+                        return;
+                    }
+                    dropdownJabatan.append($('<option></option>').attr('value', entry.id).text(entry.nama_jabatan));
+                });
+            },
+            error: function(error) {
+                console.error('Error saat mengambil data Jabatan:', error);
+            }
+        });
     });
-});
+</script>
 
-
-$(document).ready(function() {
-    var dropdown = $('#jabatan');
-    if (!dropdown.length) {
-        console.error('Dropdown tidak ditemukan');
-        return;
-    }
-    dropdown.empty();
-    // Menambahkan opsi default
-    dropdown.append($('<option></option>').attr('value', '').attr('disabled', true).attr('selected', true).text('Pilih Jabatan'));
+<script>
+    $(document).ready(function() {
     $.ajax({
         url: '/api/data-jabatan',
         type: 'GET',
         dataType: 'json',
         success: function(data) {
             if (!data) {
-                console.error('Data tidak ditemukan');
+                console.error('Data jabatan tidak ditemukan');
                 return;
             }
+            var dropdownJabatan = $('#id_jabatan');
+            dropdownJabatan.empty();
+            dropdownJabatan.append($('<option></option>').attr('value', '').text('Pilih Jabatan'));
             $.each(data, function(key, entry) {
-                if (!entry.nama_jabatan) {
-                    console.error('Properti nama_jabatan tidak ditemukan pada entri', entry);
-                    return;
-                }
-                dropdown.append($('<option></option>').attr('value', entry.nama_jabatan).text(entry.nama_jabatan));
+                dropdownJabatan.append($('<option></option>').attr('value', entry.id).text(entry.nama_jabatan));
             });
         },
         error: function(error) {
-            console.error('Error saat mengambil data:', error);
+            console.error('Error saat mengambil data jabatan:', error);
+        }
+    });
+
+    $.ajax({
+        url: '/api/data-departmen',
+        type: 'GET',
+        dataType: 'json',
+        success: function(data) {
+            if (!data) {
+                console.error('Data departemen tidak ditemukan');
+                return;
+            }
+            var dropdownDepartmen = $('#id_departmen');
+            dropdownDepartmen.empty();
+            dropdownDepartmen.append($('<option></option>').attr('value', '').text('Pilih Departemen'));
+            $.each(data, function(key, entry) {
+                dropdownDepartmen.append($('<option></option>').attr('value', entry.id).text(entry.nama_departmen));
+            });
+        },
+        error: function(error) {
+            console.error('Error saat mengambil data departemen:', error);
         }
     });
 });
 
 </script>
-
 @endsection

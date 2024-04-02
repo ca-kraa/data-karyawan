@@ -12,10 +12,14 @@ class KaryawanController extends Controller
     {
         $karyawan = Karyawan::all();
 
-        if ($karyawan->isEmpty()) {
-            return response()->json(['message' => 'Data Karyawan Kosong',], 404);
-        }
-        return response()->json(['message' => 'Data Karyawan Sukses', 'Data' => $karyawan]);
+        return response()->json($karyawan);
+    }
+
+    public function indexKaryawan2()
+    {
+        $karyawan = Karyawan::all();
+
+        return view('karyawan', compact('karyawan'));
     }
 
     public function createKaryawan(Request $request)
@@ -58,26 +62,33 @@ class KaryawanController extends Controller
     public function updateKaryawan(Request $request, $id)
     {
         $request->validate([
-            "nama_lengkap" => 'required',
-            "alamat" => 'required',
-            "tanggal_lahir" => 'required|date',
-            "nomor_handphone" => 'required|numeric',
-            "email" => 'required',
-            "dokumen" => 'nullable|file',
+            "id_jabatan" => 'nullable',
+            "id_departmen" => 'nullable',
+            "nama_lengkap" => 'nullable',
+            "alamat" => 'nullable',
+            "tanggal_lahir" => 'nullable|date',
+            "nomor_handphone" => 'nullable|numeric',
+            "email" => 'nullable',
+            "dokumen" => 'nullable',
         ]);
 
         $karyawan = Karyawan::findOrFail($id);
 
+        $karyawan->id_jabatan = $request->id_jabatan;
+        $karyawan->id_departmen = $request->id_departmen;
         $karyawan->nama_lengkap = $request->nama_lengkap;
         $karyawan->alamat = $request->alamat;
         $karyawan->tanggal_lahir = $request->tanggal_lahir;
         $karyawan->nomor_handphone = $request->nomor_handphone;
         $karyawan->email = $request->email;
 
+
         if ($request->hasFile('dokumen')) {
             $dokumenPath = $request->file('dokumen')->store('dokumen', 'public');
             $karyawan->dokumen = $dokumenPath;
         }
+
+        dd($karyawan);
 
         $karyawan->save();
 
@@ -87,6 +98,18 @@ class KaryawanController extends Controller
             return response()->json(['message' => 'Gagal Memperbarui Data Karyawan'], 500);
         }
     }
+
+    public function detailKaryawan($id)
+    {
+        $karyawan = Karyawan::find($id);
+
+        if (!$karyawan) {
+            return response()->json(['message' => 'Karyawan not found'], 404);
+        }
+
+        return response()->json(['message' => 'Success', 'data' => $karyawan], 200);
+    }
+
 
     public function deleteKaryawan($id)
     {
